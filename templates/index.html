@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f7f4">
+
+    <title>Controle de Gastos</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <main class="container">
+
+        <header class="topo">
+            <div>
+                <p class="subtitulo">PREDILETA FINANCEIRO</p>
+                <h1>Meus gastos</h1>
+            </div>
+            <div class="icone">R$</div>
+        </header>
+
+        <section class="resumo">
+            <p>Total de despesas</p>
+
+            <h2>
+                R$ {{ '{:,.2f}'.format(total_centavos / 100)
+                       | replace(',', 'X')
+                       | replace('.', ',')
+                       | replace('X', '.') }}
+            </h2>
+
+            <span>{{ gastos|length }} gasto(s) registrado(s)</span>
+        </section>
+
+        <div id="toast-container" class="toast-container" aria-live="polite">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+            <div class="toast toast-{{ categoria }}">
+                <span class="toast-icon">
+                    {% if categoria == 'sucesso' %}✓{% else %}!{% endif %}
+                </span>
+
+                <div class="toast-content">
+                    <strong>
+                        {% if categoria == 'sucesso' %}
+                            Tudo certo!
+                        {% else %}
+                            Atenção
+                        {% endif %}
+                    </strong>
+                    <p>{{ mensagem }}</p>
+                </div>
+
+                <button type="button" class="toast-close"
+                        aria-label="Fechar aviso">×</button>
+                <div class="toast-progress"></div>
+            </div>
+        {% endfor %}
+    {% endwith %}
+</div>
+
+        <section class="painel">
+            <h3>Adicionar despesa</h3>
+
+            <form action="{{ url_for('adicionar') }}" method="POST">
+                <label for="descricao">O que você pagou?</label>
+                <input
+                    type="text"
+                    id="descricao"
+                    name="descricao"
+                    placeholder="Ex.: Funcionários"
+                    maxlength="120"
+                    required
+                >
+
+                <label for="valor">Valor da despesa</label>
+                <div class="campo-valor">
+                    <span>R$</span>
+                    <input
+                        type="text"
+                        id="valor"
+                        name="valor"
+                        inputmode="decimal"
+                        placeholder="0,00"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="botao">
+                    + Registrar gasto
+                </button>
+            </form>
+        </section>
+
+        <section class="lista">
+            <div class="lista-topo">
+                <h3>Gastos cadastrados</h3>
+                <span>{{ gastos|length }}</span>
+            </div>
+
+            {% if gastos %}
+                {% for gasto in gastos %}
+                    <article class="gasto">
+                        <div class="gasto-icone">−</div>
+
+                        <div class="gasto-info">
+                            <strong>{{ gasto.descricao }}</strong>
+                            <small>Despesa registrada</small>
+                        </div>
+
+                        <div class="gasto-valor">
+                            <strong>
+                                R$ {{ '{:,.2f}'.format(
+                                    gasto.valor_centavos / 100
+                                ) | replace(',', 'X')
+                                  | replace('.', ',')
+                                  | replace('X', '.') }}
+                            </strong>
+
+                            <form
+    action="{{ url_for('excluir', gasto_id=gasto.id) }}"
+    method="POST"
+    class="form-excluir"
+>
+    <button type="submit" class="excluir">
+        Excluir
+    </button>
+</form>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <div class="vazio">
+                    <div class="vazio-icone">＋</div>
+                    <strong>Nenhum gasto cadastrado</strong>
+                    <p>Adicione sua primeira despesa acima.</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <footer>
+            Controle de Gastos
+        </footer>
+
+    </main>
+
+    <div class="confirm-overlay" id="confirm-overlay" hidden>
+    <div class="confirm-modal" role="dialog"
+         aria-modal="true" aria-labelledby="confirm-title">
+        <div class="confirm-icon">!</div>
+
+        <h3 id="confirm-title">Excluir este gasto?</h3>
+        <p>Essa ação não poderá ser desfeita.</p>
+
+        <div class="confirm-actions">
+            <button type="button" id="cancel-delete" class="btn-cancel">
+                Cancelar
+            </button>
+
+            <button type="button" id="confirm-delete" class="btn-delete">
+                Sim, excluir
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Notificações toast
+    document.querySelectorAll(".toast").forEach(toast => {
+        const close = toast.querySelector(".toast-close");
+
+        function fecharToast() {
+            if (!toast.isConnected) return;
+            toast.classList.add("toast-hiding");
+            setTimeout(() => toast.remove(), 250);
+        }
+
+        close.addEventListener("click", fecharToast);
+        setTimeout(fecharToast, 4000);
+    });
+
+    // Confirmação personalizada para exclusão
+    const overlay = document.getElementById("confirm-overlay");
+    const cancelDelete = document.getElementById("cancel-delete");
+    const confirmDelete = document.getElementById("confirm-delete");
+    let formToDelete = null;
+
+    document.querySelectorAll(".form-excluir").forEach(form => {
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+            formToDelete = form;
+            overlay.hidden = false;
+            cancelDelete.focus();
+        });
+    });
+
+    function fecharConfirmacao() {
+        overlay.hidden = true;
+        formToDelete = null;
+    }
+
+    cancelDelete.addEventListener("click", fecharConfirmacao);
+
+    overlay.addEventListener("click", event => {
+        if (event.target === overlay) fecharConfirmacao();
+    });
+
+    confirmDelete.addEventListener("click", () => {
+        if (formToDelete) formToDelete.submit();
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && !overlay.hidden) {
+            fecharConfirmacao();
+        }
+    });
+</script>
+
+</body>
+</html>
