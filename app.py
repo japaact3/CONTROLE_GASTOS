@@ -164,6 +164,7 @@ def login():
 
 @app.route("/logout", methods=["POST"])
 @login_required
+
 def logout():
     session.clear()
     flash("Você saiu da sua conta.", "sucesso")
@@ -175,17 +176,63 @@ def logout():
 def index():
     periodo = obter_periodo_atual()
 
-    gastos = Gasto.query.filter_by(
-        periodo_id=periodo.id
-    ).order_by(Gasto.id.desc()).all()
+    gastos = (
+        Gasto.query
+        .filter_by(periodo_id=periodo.id)
+        .order_by(Gasto.id.desc())
+        .all()
+    )
 
-    total_centavos = sum(g.valor_centavos for g in gastos)
+    # Total e quantidade de despesas atuais
+    total_centavos = sum(
+        gasto.valor_centavos for gasto in gastos
+    )
+    quantidade_gastos = len(gastos)
+
+    # Média diária desde o início do período
+    hoje = date.today()
+    dias_decorridos = max(
+        (hoje - periodo.data_inicio).days + 1,
+        1
+    )
+    media_diaria_centavos = round(
+        total_centavos / dias_decorridos
+    )
+
+    # Período encerrado anterior
+    periodo_anterior = (
+        Periodo.query
+        .filter(
+            Periodo.data_fim.isnot(None),
+            Periodo.id < periodo.id
+        )
+        .order_by(Periodo.id.desc())
+        .first()
+    )
+
+    total_anterior = (
+        periodo_anterior.total_centavos
+        if periodo_anterior else None
+    )
+
+    # Comparação percentual
+    variacao_percentual = None
+
+    if total_anterior is not None and total_anterior > 0:
+        variacao_percentual = (
+            (total_centavos - total_anterior)
+            / total_anterior
+        ) * 100
 
     return render_template(
         "index.html",
         gastos=gastos,
         total_centavos=total_centavos,
-        periodo=periodo
+        periodo=periodo,
+        quantidade_gastos=quantidade_gastos,
+        media_diaria_centavos=media_diaria_centavos,
+        total_anterior=total_anterior,
+        variacao_percentual=variacao_percentual,
     )
 
 

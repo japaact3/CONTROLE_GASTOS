@@ -63,6 +63,120 @@
         </section>
 
 
+        <section class="dashboard-resumo">
+    <div class="dashboard-titulo">
+        <div>
+            <h2>Visão geral</h2>
+            <p>
+                Período iniciado em
+                {{ periodo.data_inicio.strftime('%d/%m/%Y') }}
+            </p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <!-- Total de gastos -->
+        <article class="resumo-card">
+            <div class="resumo-card-topo">
+                <span class="resumo-icone icone-verde">R$</span>
+                <span class="resumo-legenda">Total gasto</span>
+            </div>
+
+            <strong class="resumo-valor">
+                R$ {{ '{:,.2f}'.format(total_centavos / 100)
+                    | replace(',', 'X')
+                    | replace('.', ',')
+                    | replace('X', '.') }}
+            </strong>
+
+            <span class="resumo-descricao">
+                No período atual
+            </span>
+        </article>
+
+        <!-- Quantidade de despesas -->
+        <article class="resumo-card">
+            <div class="resumo-card-topo">
+                <span class="resumo-icone icone-azul">#</span>
+                <span class="resumo-legenda">Despesas</span>
+            </div>
+
+            <strong class="resumo-valor">
+                {{ quantidade_gastos }}
+            </strong>
+
+            <span class="resumo-descricao">
+                Lançamentos registrados
+            </span>
+        </article>
+
+        <!-- Média diária -->
+        <article class="resumo-card">
+            <div class="resumo-card-topo">
+                <span class="resumo-icone icone-roxo">↗</span>
+                <span class="resumo-legenda">Média diária</span>
+            </div>
+
+            <strong class="resumo-valor">
+                R$ {{ '{:,.2f}'.format(media_diaria_centavos / 100)
+                    | replace(',', 'X')
+                    | replace('.', ',')
+                    | replace('X', '.') }}
+            </strong>
+
+            <span class="resumo-descricao">
+                Desde o início do período
+            </span>
+        </article>
+
+        <!-- Comparação com o período anterior -->
+        <article class="resumo-card">
+            <div class="resumo-card-topo">
+                <span class="resumo-icone icone-laranja">%</span>
+                <span class="resumo-legenda">Comparação</span>
+            </div>
+
+            {% if total_anterior is none %}
+                <strong class="resumo-valor">—</strong>
+                <span class="resumo-descricao">
+                    Sem período anterior
+                </span>
+
+            {% elif total_anterior == 0 %}
+                <strong class="resumo-valor">—</strong>
+                <span class="resumo-descricao">
+                    O período anterior não teve gastos
+                </span>
+
+            {% elif variacao_percentual is not none %}
+                <strong class="resumo-valor
+                    {% if variacao_percentual > 0 %}
+                        variacao-alta
+                    {% elif variacao_percentual < 0 %}
+                        variacao-baixa
+                    {% endif %}">
+                    {% if variacao_percentual > 0 %}+{% endif %}
+                    {{ '{:.1f}'.format(variacao_percentual)
+                        | replace('.', ',') }}%
+                </strong>
+
+                <span class="resumo-descricao">
+                    {% if variacao_percentual > 0 %}
+                        Gastos maiores que no período anterior
+                    {% elif variacao_percentual < 0 %}
+                        Gastos menores que no período anterior
+                    {% else %}
+                        Mesmo total do período anterior
+                    {% endif %}
+                </span>
+            {% endif %}
+        </article>
+
+    </div>
+</section>
+
+
 
         
 <div class="periodo-info">

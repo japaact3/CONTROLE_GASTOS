@@ -1019,3 +1019,146 @@ footer {
         font-size: 12px;
     }
 }
+
+
+
+
+
+
+
+
+/* Dashboard financeiro */
+.dashboard-resumo {
+    margin: 24px 0;
+}
+
+.dashboard-titulo {
+    margin-bottom: 18px;
+}
+
+.dashboard-titulo h2 {
+    margin: 0;
+    color: #202938;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.dashboard-titulo p {
+    margin: 6px 0 0;
+    color: #778195;
+    font-size: 13px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.resumo-card {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid #e8ecf2;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(30, 45, 70, 0.04);
+}
+
+.resumo-card-topo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 18px;
+}
+
+.resumo-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.icone-verde {
+    color: #16804a;
+    background: #e6f7ed;
+}
+
+.icone-azul {
+    color: #2563eb;
+    background: #eaf1ff;
+}
+
+.icone-roxo {
+    color: #7c3aed;
+    background: #f2eaff;
+}
+
+.icone-laranja {
+    color: #c45a12;
+    background: #fff0e3;
+}
+
+.resumo-legenda {
+    color: #778195;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.resumo-valor {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #202938;
+    font-size: clamp(19px, 2.5vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    line-height: 1.35;
+}
+
+.resumo-descricao {
+    display: block;
+    margin-top: 8px;
+    color: #8a94a6;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.variacao-alta {
+    color: #dc4545;
+}
+
+.variacao-baixa {
+    color: #16804a;
+}
+
+@media (min-width: 760px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 360px) {
+    .dashboard-grid {
+        gap: 9px;
+    }
+
+    .resumo-card {
+        padding: 12px;
+    }
+
+    .resumo-card-topo {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+        margin-bottom: 13px;
+    }
+
+    .resumo-valor {
+        font-size: 19px;
+    }
+}
