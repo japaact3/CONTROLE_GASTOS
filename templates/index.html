@@ -9,6 +9,28 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+
+    <form action="{{ url_for('logout') }}" method="POST" class="logout-form">
+    <button type="submit" class="logout-button">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+        >
+            <path d="M10 17l5-5-5-5"/>
+            <path d="M15 12H3"/>
+            <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>
+        </svg>
+        <span>Sair</span>
+    </button>
+</form>
 </head>
 <body>
 
@@ -19,7 +41,12 @@
                 <p class="subtitulo">PREDILETA FINANCEIRO</p>
                 <h1>Meus gastos</h1>
             </div>
-            <div class="icone">R$</div>
+            <div class="login-icon">
+                <img
+                    src="{{ url_for('static', filename='img/logopredileta.png') }}"
+                    alt="Logo do Financeiro predileta"
+                >
+            </div>
         </header>
 
         <section class="resumo">
@@ -34,6 +61,35 @@
 
             <span>{{ gastos|length }} gasto(s) registrado(s)</span>
         </section>
+
+
+
+        
+<div class="periodo-info">
+    <span>Período iniciado em</span>
+    <strong>{{ periodo.data_inicio.strftime('%d/%m/%Y') }}</strong>
+</div>
+
+<form action="{{ url_for('encerrar_periodo') }}"
+      method="POST"
+      id="form-encerrar">
+    <button type="button"
+            class="botao-encerrar"
+            id="abrir-confirmacao-periodo">
+        <span>▣</span>
+        Encerrar período
+    </button>
+</form>
+
+<a href="{{ url_for('historico') }}" class="link-historico">
+    <span>▤</span>
+    Consultar resumos anteriores
+    <span class="seta">→</span>
+</a>
+
+
+
+
 
         <div id="toast-container" class="toast-container" aria-live="polite">
     {% with mensagens = get_flashed_messages(with_categories=true) %}
@@ -166,6 +222,73 @@
         </div>
     </div>
 </div>
+
+
+<div class="confirm-overlay" id="modal-encerrar" hidden>
+    <div class="confirm-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="titulo-encerrar">
+
+        <div class="confirm-icon">✓</div>
+
+        <h3 id="titulo-encerrar">Encerrar período?</h3>
+
+        <p>
+            O resumo será salvo no histórico e um novo período será
+            iniciado. Os gastos anteriores não serão apagados.
+        </p>
+
+        <div class="confirm-actions">
+            <button type="button"
+                    class="btn-cancel"
+                    id="cancelar-encerrar">
+                Voltar
+            </button>
+
+            <button type="button"
+                    class="btn-delete"
+                    id="confirmar-encerrar">
+                Sim, encerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const modalEncerrar = document.getElementById("modal-encerrar");
+    const formEncerrar = document.getElementById("form-encerrar");
+
+    document.getElementById("abrir-confirmacao-periodo")
+        .addEventListener("click", () => {
+            modalEncerrar.hidden = false;
+        });
+
+    document.getElementById("cancelar-encerrar")
+        .addEventListener("click", () => {
+            modalEncerrar.hidden = true;
+        });
+
+    document.getElementById("confirmar-encerrar")
+        .addEventListener("click", () => {
+            formEncerrar.requestSubmit();
+        });
+
+    modalEncerrar.addEventListener("click", event => {
+        if (event.target === modalEncerrar) {
+            modalEncerrar.hidden = true;
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            modalEncerrar.hidden = true;
+        }
+    });
+</script>
+</body>
+</html>
+
 
 <script>
     // Notificações toast

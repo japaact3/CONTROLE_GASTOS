@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f7f4">
+    <title>Detalhes do período</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+<main class="container">
+
+    <header class="topo">
+        <div>
+            <p class="subtitulo">RESUMO ARQUIVADO</p>
+            <h1>Detalhes</h1>
+        </div>
+        <div class="icone">✓</div>
+    </header>
+
+    <a href="{{ url_for('historico') }}" class="voltar-link">
+        ← Voltar ao histórico
+    </a>
+
+    <section class="resumo">
+        <p>Total do período</p>
+        <h2>
+            R$ {{ '{:,.2f}'.format(
+                periodo.total_centavos / 100
+            ) | replace(',', 'X')
+              | replace('.', ',')
+              | replace('X', '.') }}
+        </h2>
+        <span>{{ periodo.quantidade_gastos }} gasto(s) registrados</span>
+    </section>
+
+    <section class="painel">
+        <h3>Informações do fechamento</h3>
+
+        <div class="detalhe-linha">
+            <span>Data de início</span>
+            <strong>{{ periodo.data_inicio.strftime('%d/%m/%Y') }}</strong>
+        </div>
+
+        <div class="detalhe-linha">
+            <span>Data de encerramento</span>
+            <strong>{{ periodo.data_fim.strftime('%d/%m/%Y') }}</strong>
+        </div>
+
+        <div class="detalhe-linha">
+            <span>Situação</span>
+            <strong class="status-texto">Encerrado</strong>
+        </div>
+    </section>
+
+    <section class="lista">
+        <h3>Despesas deste período</h3>
+
+        {% for gasto in gastos %}
+            <article class="gasto">
+                <div class="gasto-icone">−</div>
+
+                <div class="gasto-info">
+                    <strong>{{ gasto.descricao }}</strong>
+                    <small>Despesa arquivada</small>
+                </div>
+
+                <div class="gasto-valor">
+                    <strong>
+                        R$ {{ '{:,.2f}'.format(
+                            gasto.valor_centavos / 100
+                        ) | replace(',', 'X')
+                          | replace('.', ',')
+                          | replace('X', '.') }}
+                    </strong>
+                </div>
+            </article>
+        {% else %}
+            <div class="vazio">
+                Nenhuma despesa encontrada neste período.
+            </div>
+        {% endfor %}
+    </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f7f4">
+    <title>Histórico de períodos</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="container">
+
+    <header class="topo">
+        <div>
+            <p class="subtitulo">CONTROLE FINANCEIRO</p>
+            <h1>Histórico</h1>
+        </div>
+        <div class="icone">▤</div>
+    </header>
+
+    <a href="{{ url_for('index') }}" class="voltar-link">
+        ← Voltar para os gastos
+    </a>
+
+    <section class="historico-intro">
+        <h2>Períodos encerrados</h2>
+        <p>Consulte os resumos financeiros que você salvou.</p>
+    </section>
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+            <div class="mensagem {{ categoria }}">
+                {{ mensagem }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if periodos %}
+        {% for periodo in periodos %}
+            
+<div class="periodo-card">
+
+    <a class="periodo-card-link"
+       href="{{ url_for('detalhes_periodo',
+                        periodo_id=periodo.id) }}">
+
+        <div class="periodo-card-topo">
+            <div class="periodo-icone">✓</div>
+            <span class="status-encerrado">Encerrado</span>
+        </div>
+
+        <div class="periodo-datas">
+            {{ periodo.data_inicio.strftime('%d/%m/%Y') }}
+            até
+            {{ periodo.data_fim.strftime('%d/%m/%Y') }}
+        </div>
+
+        <div class="periodo-total">
+            R$ {{ '{:,.2f}'.format(
+                periodo.total_centavos / 100
+            ) | replace(',', 'X')
+              | replace('.', ',')
+              | replace('X', '.') }}
+        </div>
+
+        <div class="periodo-rodape">
+            {{ periodo.quantidade_gastos }} gasto(s)
+            <span>Ver detalhes →</span>
+        </div>
+    </a>
+
+    <form
+        action="{{ url_for('excluir_periodo',
+                          periodo_id=periodo.id) }}"
+        method="POST"
+        class="form-excluir-periodo"
+        data-periodo="{{ periodo.data_inicio.strftime('%d/%m/%Y') }}">
+
+        <button type="button" class="botao-excluir-periodo">
+            <span aria-hidden="true">×</span>
+            Excluir período
+        </button>
+    </form>
+
+</div>
+
+        {% endfor %}
+    {% else %}
+        <div class="vazio">
+            <div class="vazio-icone">▤</div>
+            <strong>Nenhum resumo salvo ainda</strong>
+            <p>Quando você encerrar seu primeiro período, ele aparecerá aqui.</p>
+        </div>
+    {% endif %}
+
+</main>
+
+
+<div class="confirm-overlay" id="modal-excluir-periodo" hidden>
+    <div class="confirm-modal"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="titulo-excluir-periodo">
+
+        <div class="confirm-icon confirm-icon-danger">!</div>
+
+        <h3 id="titulo-excluir-periodo">Excluir período?</h3>
+
+        <p id="mensagem-excluir-periodo">
+            Esta ação excluirá o resumo e os gastos vinculados.
+            Não será possível desfazê-la.
+        </p>
+
+        <div class="confirm-actions">
+            <button type="button"
+                    class="btn-cancel"
+                    id="cancelar-exclusao-periodo">
+                Cancelar
+            </button>
+
+            <button type="button"
+                    class="btn-delete"
+                    id="confirmar-exclusao-periodo">
+                Sim, excluir
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const modalExcluirPeriodo =
+        document.getElementById("modal-excluir-periodo");
+
+    const mensagemExcluirPeriodo =
+        document.getElementById("mensagem-excluir-periodo");
+
+    const cancelarExclusaoPeriodo =
+        document.getElementById("cancelar-exclusao-periodo");
+
+    const confirmarExclusaoPeriodo =
+        document.getElementById("confirmar-exclusao-periodo");
+
+    let formularioPeriodoSelecionado = null;
+
+    document.querySelectorAll(".form-excluir-periodo").forEach(form => {
+        const botao = form.querySelector(".botao-excluir-periodo");
+
+        botao.addEventListener("click", () => {
+            formularioPeriodoSelecionado = form;
+
+            const data = form.dataset.periodo;
+
+            mensagemExcluirPeriodo.textContent =
+                `O período iniciado em ${data}, seu resumo e todos ` +
+                "os gastos vinculados serão excluídos permanentemente.";
+
+            modalExcluirPeriodo.hidden = false;
+            cancelarExclusaoPeriodo.focus();
+        });
+    });
+
+    function fecharModalExclusao() {
+        modalExcluirPeriodo.hidden = true;
+        formularioPeriodoSelecionado = null;
+    }
+
+    cancelarExclusaoPeriodo.addEventListener(
+        "click",
+        fecharModalExclusao
+    );
+
+    modalExcluirPeriodo.addEventListener("click", event => {
+        if (event.target === modalExcluirPeriodo) {
+            fecharModalExclusao();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (
+            event.key === "Escape" &&
+            !modalExcluirPeriodo.hidden
+        ) {
+            fecharModalExclusao();
+        }
+    });
+
+    confirmarExclusaoPeriodo.addEventListener("click", () => {
+        if (!formularioPeriodoSelecionado) return;
+
+        confirmarExclusaoPeriodo.disabled = true;
+        confirmarExclusaoPeriodo.textContent = "Excluindo...";
+
+        formularioPeriodoSelecionado.requestSubmit();
+    });
+</script>
+</body>
+</html>
+
+
+
+</body>
+</html>

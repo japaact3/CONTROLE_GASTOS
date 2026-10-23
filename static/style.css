@@ -552,3 +552,470 @@ footer {
         animation: none;
     }
 }
+
+
+
+/* ===== CONTROLE DE PERÍODOS ===== */
+
+.periodo-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0 16px;
+    color: var(--secundario);
+    font-size: 12px;
+}
+
+.periodo-info strong {
+    color: var(--texto);
+}
+
+.botao-encerrar {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 1px solid #f0d2bf;
+    border-radius: 14px;
+    background: #fff0e5;
+    color: #b95318;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+
+.botao-encerrar:hover {
+    background: #ffe5d2;
+}
+
+.botao-encerrar:active {
+    transform: scale(.98);
+}
+
+.link-historico,
+.voltar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--texto);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.link-historico {
+    margin: 20px 2px 28px;
+    padding: 14px 0;
+}
+
+.link-historico .seta {
+    margin-left: auto;
+    color: var(--laranja);
+    font-size: 18px;
+}
+
+.voltar-link {
+    display: inline-flex;
+    margin: 4px 0 22px;
+    color: var(--laranja);
+}
+
+.historico-intro {
+    margin-bottom: 20px;
+}
+
+.historico-intro h2 {
+    font-size: 21px;
+    margin-bottom: 7px;
+}
+
+.historico-intro p {
+    color: var(--secundario);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.periodo-card {
+    display: block;
+    padding: 19px;
+    margin-bottom: 13px;
+    color: var(--texto);
+    text-decoration: none;
+    background: white;
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.periodo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .05);
+}
+
+.periodo-card-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 17px;
+}
+
+.periodo-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #e5f5ec;
+    color: #21865b;
+    font-weight: 800;
+}
+
+.status-encerrado {
+    padding: 7px 10px;
+    border-radius: 20px;
+    background: #e5f5ec;
+    color: #21865b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.periodo-datas {
+    color: var(--secundario);
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.periodo-total {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -.6px;
+    overflow-wrap: anywhere;
+}
+
+.periodo-rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid var(--borda);
+    color: var(--secundario);
+    font-size: 12px;
+}
+
+.periodo-rodape span {
+    color: var(--laranja);
+    font-weight: 700;
+}
+
+.detalhe-linha {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--borda);
+    font-size: 13px;
+}
+
+.detalhe-linha:last-child {
+    border-bottom: none;
+}
+
+.detalhe-linha span {
+    color: var(--secundario);
+}
+
+.detalhe-linha strong {
+    text-align: right;
+}
+
+.status-texto {
+    color: var(--verde);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .periodo-card,
+    .botao-encerrar {
+        transition: none;
+    }
+}
+
+
+
+
+/* Cartão com link e botão de exclusão separados */
+
+.periodo-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.periodo-card-link {
+    display: block;
+    padding: 19px;
+    color: var(--texto);
+    text-decoration: none;
+}
+
+.periodo-card-link .periodo-card-topo {
+    margin-bottom: 17px;
+}
+
+.form-excluir-periodo {
+    padding: 0 19px 16px;
+}
+
+.botao-excluir-periodo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid #f0d6d3;
+    border-radius: 11px;
+    background: #fff;
+    color: #c8443d;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+
+.botao-excluir-periodo:hover {
+    background: #fff1f0;
+    border-color: #e7b8b4;
+}
+
+.botao-excluir-periodo span {
+    font-size: 19px;
+    line-height: 1;
+}
+
+.confirm-icon-danger {
+    background: #fce9e7;
+    color: #c8443d;
+}
+
+.botao-excluir-periodo:focus-visible,
+.confirm-actions button:focus-visible {
+    outline: 3px solid #d96b2466;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .botao-excluir-periodo {
+        transition: none;
+    }
+}
+
+
+.login-page {
+    min-height: 100vh;
+    margin: 0;
+    background: #f4f6fa;
+    color: #202938;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 390px;
+    padding: 32px 26px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid #e7eaf0;
+    border-radius: 22px;
+    box-shadow: 0 16px 45px rgba(25, 40, 70, 0.08);
+}
+
+.login-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border-radius: 18px;
+    background: #e8f5ee;
+    color: #218653;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.login-card h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 25px;
+    letter-spacing: -0.7px;
+}
+
+.login-subtitle {
+    margin: 10px 0 28px;
+    color: #778195;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-card label {
+    margin-top: 7px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.login-card input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 13px;
+    box-sizing: border-box;
+    border: 1px solid #dfe4ec;
+    border-radius: 11px;
+    background: #fff;
+    color: #202938;
+    font-size: 15px;
+    outline: none;
+}
+
+.login-card input:focus {
+    border-color: #218653;
+    box-shadow: 0 0 0 3px rgba(33, 134, 83, 0.12);
+}
+
+.login-button {
+    min-height: 49px;
+    margin-top: 14px;
+    border: none;
+    border-radius: 11px;
+    background: #218653;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background: #176b41;
+}
+
+.login-alerta {
+    margin-bottom: 14px;
+    padding: 12px;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.login-alerta.erro {
+    background: #fff0ef;
+    color: #b42318;
+}
+
+.login-alerta.sucesso {
+    background: #eaf8ef;
+    color: #176b41;
+}
+
+.login-footer {
+    margin: 24px 0 0;
+    color: #8b94a5;
+    text-align: center;
+    font-size: 12px;
+}
+
+
+.login-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border-radius: 50%;
+    overflow: visible;
+}
+
+.login-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 50%;
+}
+
+
+
+
+
+/* Botão de sair da conta */
+.logout-form {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+}
+
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #64748b;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #fff1f0;
+    border-color: #f3c5c1;
+    color: #c8443d;
+}
+
+.logout-button:active {
+    transform: scale(0.97);
+}
+
+.logout-button:focus-visible {
+    outline: 3px solid #d96b2466;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .logout-button {
+        min-height: 38px;
+        padding: 0 11px;
+        font-size: 12px;
+    }
+}
